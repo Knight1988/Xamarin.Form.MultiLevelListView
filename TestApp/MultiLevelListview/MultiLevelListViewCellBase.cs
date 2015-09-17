@@ -14,6 +14,10 @@ namespace MultiLevelListview
         /// Check if cell is visible
         /// </summary>
         private bool _isVisible = true;
+        /// <summary>
+        /// Check if cell is selected (use for Checkbox, Selection cells)
+        /// </summary>
+        public bool IsSelected { get; set; }
 
         public MultiLevelListViewCellBase()
         {
