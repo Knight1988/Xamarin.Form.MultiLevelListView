@@ -1,0 +1,185 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using Xamarin.Forms;
+
+namespace MultiLevelListview
+{
+    public class MultiLevelListview<T> : TableView where T : MultiLevelListViewCellBase, new()
+    {
+        /// <summary>
+        ///     Flattened source
+        /// </summary>
+        private List<MultiLevelListViewCellBase> _flattened = new List<MultiLevelListViewCellBase>();
+
+        /// <summary>
+        ///     Tree source
+        /// </summary>
+        private List<T> _source = new List<T>();
+
+        public MultiLevelListview()
+        {
+            PropertyChanged += OnPropertyChanged;
+        }
+
+        /// <summary>
+        ///     Tree source
+        /// </summary>
+        public List<T> Source
+        {
+            get { return _source; }
+            set
+            {
+                _source = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        ///     Collapse all cells
+        /// </summary>
+        public void CollapseAll()
+        {
+            foreach (var cell in Source)
+            {
+                cell.Collapse();
+            }
+        }
+
+        /// <summary>
+        ///     Expand all cells
+        /// </summary>
+        public void ExpandAll()
+        {
+            foreach (var cell in Source)
+            {
+                cell.ExpandAll();
+            }
+        }
+
+        /// <summary>
+        /// Cell visible toggle handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="eventArgs"></param>
+        private void CellBaseOnVisibleToggled(object sender, EventArgs eventArgs)
+        {
+            var visibleCells = GetVisibleCell();
+            LoadSource(visibleCells);
+        }
+
+        /// <summary>
+        ///     Clear visible toggle event
+        /// </summary>
+        private void ClearSourceEvents()
+        {
+            foreach (var cell in _flattened)
+            {
+                cell.ClearVisibleToggledEvent();
+                cell.VisibleToggled += CellBaseOnVisibleToggled;
+            }
+        }
+
+        /// <summary>
+        ///     Flatten tree
+        /// </summary>
+        /// <param name="roots"></param>
+        /// <returns></returns>
+        private List<MultiLevelListViewCellBase> Flatten(List<MultiLevelListViewCellBase> roots)
+        {
+            var root = new MultiLevelListViewCellBase();
+
+            root.Children.AddRange(roots);
+            var flattened = Flatten(root);
+            flattened.Remove(root);
+            return flattened;
+        }
+
+        /// <summary>
+        ///     Flatten tree
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        private static List<MultiLevelListViewCellBase> Flatten(MultiLevelListViewCellBase root)
+        {
+            var flattened = new List<MultiLevelListViewCellBase> {root};
+
+            var children = root.Children;
+
+            if (children != null)
+            {
+                foreach (var child in children)
+                {
+                    flattened.AddRange(Flatten(child));
+                }
+            }
+
+            return flattened.ToList();
+        }
+
+        /// <summary>
+        ///     Get cells to display
+        /// </summary>
+        /// <returns></returns>
+        private List<MultiLevelListViewCellBase> GetVisibleCell()
+        {
+            var list = new List<MultiLevelListViewCellBase>();
+            // Mark root
+            foreach (var source in Source)
+            {
+                source.IsRoot = true;
+            }
+
+            // Get visible cells
+            foreach (var cellBase in _flattened)
+            {
+                if (cellBase.IsRoot || cellBase.IsVisible)
+                {
+                    list.Add(cellBase);
+                }
+            }
+            return list;
+        }
+
+        /// <summary>
+        ///     Display source
+        /// </summary>
+        /// <param name="source"></param>
+        private void LoadSource(List<MultiLevelListViewCellBase> source)
+        {
+            var section = new TableSection();
+
+            foreach (var cell in source)
+            {
+                section.Add(cell);
+            }
+
+            Root = new TableRoot
+            {
+                section
+            };
+        }
+
+        /// <summary>
+        /// Check if source is changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == "Source")
+            {
+                // Collapse new source
+                CollapseAll();
+                // flatten new source
+                _flattened = Flatten(Source.Cast<MultiLevelListViewCellBase>().ToList());
+                // clear source events
+                ClearSourceEvents();
+                // display new source
+                var visibleCells = GetVisibleCell();
+                LoadSource(visibleCells);
+            }
+        }
+    }
+}
