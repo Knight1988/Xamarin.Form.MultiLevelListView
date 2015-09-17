@@ -12,10 +12,18 @@ namespace TestApp
     {
         public TestCell(string text)
         {
-            View = new Label()
+            View = Label =new Label()
             {
                 Text = text
             };
+        }
+
+        protected Label Label { get; set; }
+
+        public string Text
+        {
+            get { return Label.Text; }
+            set { Label.Text = value; }
         }
 
         public TestCell()

@@ -65,6 +65,8 @@ namespace MultiLevelListview
         /// <param name="eventArgs"></param>
         private void CellBaseOnVisibleToggled(object sender, EventArgs eventArgs)
         {
+            if (IsFiltering) return;
+
             var visibleCells = GetVisibleCell();
             LoadSource(visibleCells);
         }
@@ -181,5 +183,36 @@ namespace MultiLevelListview
                 LoadSource(visibleCells);
             }
         }
+
+        /// <summary>
+        /// Filter list, result will show as normal list
+        /// </summary>
+        /// <param name="compareFunc"></param>
+        public void Filter(Func<MultiLevelListViewCellBase, bool> compareFunc)
+        {
+            IsFiltering = true;
+            var visileCells = new List<MultiLevelListViewCellBase>();
+            foreach (MultiLevelListViewCellBase @base in _flattened)
+            {
+                if (compareFunc(@base))
+                {
+                    visileCells.Add(@base);
+                }
+            }
+
+            LoadSource(visileCells);
+        }
+
+        /// <summary>
+        /// Clear filter result
+        /// </summary>
+        public void ClearFilter()
+        {
+            IsFiltering = false;
+            var visibleCells = GetVisibleCell();
+            LoadSource(visibleCells);
+        }
+
+        public bool IsFiltering { get; set; }
     }
 }

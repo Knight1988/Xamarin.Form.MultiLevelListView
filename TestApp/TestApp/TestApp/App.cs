@@ -38,6 +38,12 @@ namespace TestApp
             }
 
             lv.Source = cells;
+            lv.Filter(@base =>
+            {
+                var test = (TestCell) @base;
+                return test.Text.Contains("1");
+            });
+            //lv.ClearFilter();
         }
 
         protected override void OnStart()
