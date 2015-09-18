@@ -6,7 +6,7 @@ using Xamarin.Forms;
 
 namespace MR.Gestures
 {
-    public class MultiLevelListview<T> : TableView where T : MultiLevelListViewCellBase, new()
+    public class MultiLevelListview : TableView
     {
         /// <summary>
         ///     Flattened source
@@ -16,7 +16,7 @@ namespace MR.Gestures
         /// <summary>
         ///     Tree source
         /// </summary>
-        private List<T> _source = new List<T>();
+        private List<MultiLevelListViewCellBase> _source = new List<MultiLevelListViewCellBase>();
 
         public MultiLevelListview()
         {
@@ -26,7 +26,7 @@ namespace MR.Gestures
         /// <summary>
         ///     Tree source
         /// </summary>
-        public List<T> Source
+        public List<MultiLevelListViewCellBase> Source
         {
             get { return _source; }
             set
@@ -222,7 +222,7 @@ namespace MR.Gestures
                 // Collapse new source
                 CollapseAll();
                 // flatten new source
-                _flattened = Flatten(Source.Cast<MultiLevelListViewCellBase>().ToList());
+                _flattened = Flatten(Source.ToList());
                 // clear source events
                 ClearSourceEvents();
                 // display new source

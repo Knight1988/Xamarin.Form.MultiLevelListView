@@ -8,7 +8,7 @@ namespace TestApp
     {
         public App()
         {
-            var lv = new MultiLevelListview<TestCell>();
+            var lv = new MultiLevelListview.MultiLevelListview();
             // The root page of your application
             MainPage = new ContentPage
             {
@@ -34,7 +34,7 @@ namespace TestApp
                 }
             }
 
-            lv.Source = cells;
+            lv.Source = new List<MultiLevelListViewCellBase>(cells);
             lv.Filter(@base =>
             {
                 var test = (TestCell) @base;
