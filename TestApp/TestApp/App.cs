@@ -24,12 +24,12 @@ namespace TestApp
                 for (var j = 0; j < 12; j++)
                 {
                     var cell1 = new TestCell(string.Format("Test {0}-{1}", i, j));
-                    root.Children.Add(cell1);
+                    root.AddChild(cell1);
 
                     for (var k = 0; k < 12; k++)
                     {
                         var cell2 = new TestCell(string.Format("Test {0}-{1}-{2}", i, j, k));
-                        cell1.Children.Add(cell2);
+                        cell1.AddChild(cell2);
                     }
                 }
             }

@@ -139,7 +139,7 @@ namespace MR.Gestures
         {
             var root = new MultiLevelListViewCellBase();
 
-            root.Children.AddRange(roots);
+            root.Children = root.Children.Concat(roots);
             var flattened = Flatten(root);
             flattened.Remove(root);
             return flattened;

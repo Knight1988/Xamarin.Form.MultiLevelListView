@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MR.Gestures
 {
@@ -40,10 +41,19 @@ namespace MR.Gestures
         /// <summary>
         /// Children cells
         /// </summary>
-        public List<MultiLevelListViewCellBase> Children
+        public IEnumerable<MultiLevelListViewCellBase> Children
         {
             get { return _children; }
-            set { _children = value; }
+            set { _children = value.ToList(); }
+        }
+
+        /// <summary>
+        /// Add child
+        /// </summary>
+        /// <param name="cell"></param>
+        public void AddChild(MultiLevelListViewCellBase cell)
+        {
+            _children.Add(cell);
         }
 
         /// <summary>
