@@ -26,12 +26,12 @@ namespace MultiLevelListview
         /// <summary>
         ///     Tree source
         /// </summary>
-        public List<MultiLevelListViewCellBase> Source
+        public IEnumerable<MultiLevelListViewCellBase> Source
         {
             get { return _source; }
             set
             {
-                _source = value;
+                _source = value.ToList();
                 OnPropertyChanged();
             }
         }
@@ -69,7 +69,7 @@ namespace MultiLevelListview
         /// </summary>
         public void CollapseAll()
         {
-            foreach (var cell in Source)
+            foreach (var cell in _source)
             {
                 cell.Collapse();
             }
@@ -80,7 +80,7 @@ namespace MultiLevelListview
         /// </summary>
         public void ExpandAll()
         {
-            foreach (var cell in Source)
+            foreach (var cell in _source)
             {
                 cell.ExpandAll();
             }
@@ -175,7 +175,7 @@ namespace MultiLevelListview
         {
             var list = new List<MultiLevelListViewCellBase>();
             // Mark root
-            foreach (var source in Source)
+            foreach (var source in _source)
             {
                 source.IsRoot = true;
             }
@@ -222,7 +222,7 @@ namespace MultiLevelListview
                 // Collapse new source
                 CollapseAll();
                 // flatten new source
-                _flattened = Flatten(Source.ToList());
+                _flattened = Flatten(_source);
                 // clear source events
                 ClearSourceEvents();
                 // display new source

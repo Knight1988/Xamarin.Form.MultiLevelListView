@@ -34,7 +34,7 @@ namespace TestApp
                 }
             }
 
-            lv.Source = new List<MultiLevelListViewCellBase>(cells);
+            lv.Source = cells.ToArray();
             lv.Filter(@base =>
             {
                 var test = (TestCell) @base;
