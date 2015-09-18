@@ -226,8 +226,7 @@ namespace MultiLevelListview
                 // clear source events
                 ClearSourceEvents();
                 // display new source
-                var visibleCells = GetVisibleCell();
-                LoadSource(visibleCells);
+                ClearFilter();
             }
         }
     }

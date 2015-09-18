@@ -8,17 +8,25 @@ namespace MultiLevelListview
     public class MultiLevelListViewCellBase : ViewCell
     {
         /// <summary>
-        /// Children cell
+        ///     Children cell
         /// </summary>
         private List<MultiLevelListViewCellBase> _children = new List<MultiLevelListViewCellBase>();
+
         /// <summary>
-        /// Check if cell is visible
+        ///     True - Collapse
+        ///     False - Expand
+        /// </summary>
+        private bool _isCollapse;
+
+        /// <summary>
+        ///     Check if cell is selected (use for Checkbox, Selection cells)
+        /// </summary>
+        private bool _isSelected;
+
+        /// <summary>
+        ///     Check if cell is visible
         /// </summary>
         private bool _isVisible = true;
-        /// <summary>
-        /// Check if cell is selected (use for Checkbox, Selection cells)
-        /// </summary>
-        public bool IsSelected { get; set; }
 
         public MultiLevelListViewCellBase()
         {
@@ -26,12 +34,25 @@ namespace MultiLevelListview
         }
 
         /// <summary>
-        /// Check if cell is root
+        ///     Check if cell is selected (use for Checkbox, Selection cells)
+        /// </summary>
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set
+            {
+                _isSelected = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        ///     Check if cell is root
         /// </summary>
         internal bool IsRoot { get; set; }
 
         /// <summary>
-        /// Check if cell is visible
+        ///     Check if cell is visible
         /// </summary>
         internal bool IsVisible
         {
@@ -40,12 +61,26 @@ namespace MultiLevelListview
         }
 
         /// <summary>
-        /// Children cells
+        ///     Children cells
         /// </summary>
         public IEnumerable<MultiLevelListViewCellBase> Children
         {
             get { return _children; }
             set { _children = value.ToList(); }
+        }
+
+        /// <summary>
+        ///     True - Collapse
+        ///     False - Expand
+        /// </summary>
+        protected bool IsCollapse
+        {
+            get { return _isCollapse; }
+            set
+            {
+                _isCollapse = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -58,13 +93,7 @@ namespace MultiLevelListview
         }
 
         /// <summary>
-        /// True - Collapse
-        /// False - Expand
-        /// </summary>
-        protected bool IsCollapse { get; set; }
-
-        /// <summary>
-        /// Remove toggle event
+        ///     Remove toggle event
         /// </summary>
         public void ClearVisibleToggledEvent()
         {
@@ -72,7 +101,7 @@ namespace MultiLevelListview
         }
 
         /// <summary>
-        /// Collapse cell
+        ///     Collapse cell
         /// </summary>
         public void Collapse()
         {
@@ -88,7 +117,7 @@ namespace MultiLevelListview
         }
 
         /// <summary>
-        /// Expand cell
+        ///     Expand cell
         /// </summary>
         public void Expand()
         {
@@ -101,7 +130,7 @@ namespace MultiLevelListview
         }
 
         /// <summary>
-        /// Expand all sub cell
+        ///     Expand all sub cell
         /// </summary>
         public void ExpandAll()
         {
@@ -113,7 +142,7 @@ namespace MultiLevelListview
         }
 
         /// <summary>
-        /// Toggle cell visiblility
+        ///     Toggle cell visiblility
         /// </summary>
         public void VisibleToggle()
         {
@@ -124,7 +153,7 @@ namespace MultiLevelListview
         }
 
         /// <summary>
-        /// Trigger visible toggle event
+        ///     Trigger visible toggle event
         /// </summary>
         protected virtual void OnVisibleToggled()
         {
@@ -133,7 +162,7 @@ namespace MultiLevelListview
         }
 
         /// <summary>
-        /// OnTapped handler
+        ///     OnTapped handler
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
@@ -143,7 +172,7 @@ namespace MultiLevelListview
         }
 
         /// <summary>
-        /// Trigger on visibe toggled
+        ///     Trigger on visibe toggled
         /// </summary>
         public event EventHandler VisibleToggled;
     }

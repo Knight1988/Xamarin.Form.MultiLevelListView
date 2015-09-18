@@ -8,49 +8,51 @@ namespace MR.Gestures
     public class MultiLevelListViewCellBase : ViewCell
     {
         /// <summary>
-        /// Children cell
+        ///     Children cell
         /// </summary>
         private List<MultiLevelListViewCellBase> _children = new List<MultiLevelListViewCellBase>();
+
         /// <summary>
-        /// Check if cell is visible
+        ///     True - Collapse
+        ///     False - Expand
+        /// </summary>
+        private bool _isCollapse;
+
+        /// <summary>
+        ///     Check if cell is selected (use for Checkbox, Selection cells)
+        /// </summary>
+        private bool _isSelected;
+
+        /// <summary>
+        ///     Check if cell is visible
         /// </summary>
         private bool _isVisible = true;
-        /// <summary>
-        /// Check if cell is selected (use for Checkbox, Selection cells)
-        /// </summary>
-        public bool IsSelected { get; set; }
 
         public MultiLevelListViewCellBase()
         {
             PropertyChanged += OnPropertyChanged;
         }
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        /// <summary>
+        ///     Check if cell is selected (use for Checkbox, Selection cells)
+        /// </summary>
+        public bool IsSelected
         {
-            if (args.PropertyName == "View" && View != null)
+            get { return _isSelected; }
+            set
             {
-                var layout = View as IGestureAwareControl;
-                if (layout != null) layout.Tapping += OnTapping;
+                _isSelected = value;
+                OnPropertyChanged();
             }
         }
 
         /// <summary>
-        /// OnTapping handler
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="tapEventArgs"></param>
-        protected void OnTapping(object sender, TapEventArgs tapEventArgs)
-        {
-            VisibleToggle();
-        }
-
-        /// <summary>
-        /// Check if cell is root
+        ///     Check if cell is root
         /// </summary>
         internal bool IsRoot { get; set; }
 
         /// <summary>
-        /// Check if cell is visible
+        ///     Check if cell is visible
         /// </summary>
         internal bool IsVisible
         {
@@ -59,7 +61,7 @@ namespace MR.Gestures
         }
 
         /// <summary>
-        /// Children cells
+        ///     Children cells
         /// </summary>
         public IEnumerable<MultiLevelListViewCellBase> Children
         {
@@ -68,7 +70,21 @@ namespace MR.Gestures
         }
 
         /// <summary>
-        /// Add child
+        ///     True - Collapse
+        ///     False - Expand
+        /// </summary>
+        protected bool IsCollapse
+        {
+            get { return _isCollapse; }
+            set
+            {
+                _isCollapse = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        ///     Add child
         /// </summary>
         /// <param name="cell"></param>
         public void AddChild(MultiLevelListViewCellBase cell)
@@ -77,13 +93,7 @@ namespace MR.Gestures
         }
 
         /// <summary>
-        /// True - Collapse
-        /// False - Expand
-        /// </summary>
-        protected bool IsCollapse { get; set; }
-
-        /// <summary>
-        /// Remove toggle event
+        ///     Remove toggle event
         /// </summary>
         public void ClearVisibleToggledEvent()
         {
@@ -91,7 +101,7 @@ namespace MR.Gestures
         }
 
         /// <summary>
-        /// Collapse cell
+        ///     Collapse cell
         /// </summary>
         public void Collapse()
         {
@@ -107,7 +117,7 @@ namespace MR.Gestures
         }
 
         /// <summary>
-        /// Expand cell
+        ///     Expand cell
         /// </summary>
         public void Expand()
         {
@@ -120,7 +130,7 @@ namespace MR.Gestures
         }
 
         /// <summary>
-        /// Expand all sub cell
+        ///     Expand all sub cell
         /// </summary>
         public void ExpandAll()
         {
@@ -132,7 +142,7 @@ namespace MR.Gestures
         }
 
         /// <summary>
-        /// Toggle cell visiblility
+        ///     Toggle cell visiblility
         /// </summary>
         public void VisibleToggle()
         {
@@ -143,7 +153,17 @@ namespace MR.Gestures
         }
 
         /// <summary>
-        /// Trigger visible toggle event
+        ///     OnTapping handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="tapEventArgs"></param>
+        protected void OnTapping(object sender, TapEventArgs tapEventArgs)
+        {
+            VisibleToggle();
+        }
+
+        /// <summary>
+        ///     Trigger visible toggle event
         /// </summary>
         protected virtual void OnVisibleToggled()
         {
@@ -151,8 +171,17 @@ namespace MR.Gestures
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == "View" && View != null)
+            {
+                var layout = View as IGestureAwareControl;
+                if (layout != null) layout.Tapping += OnTapping;
+            }
+        }
+
         /// <summary>
-        /// Trigger on visibe toggled
+        ///     Trigger on visibe toggled
         /// </summary>
         public event EventHandler VisibleToggled;
     }
