@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace MR.Gestures
@@ -21,7 +22,26 @@ namespace MR.Gestures
 
         public MultiLevelListViewCellBase()
         {
-            Tapped += OnTapped;
+            PropertyChanged += OnPropertyChanged;
+        }
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == "View" && View != null)
+            {
+                var layout = View as IGestureAwareControl;
+                if (layout != null) layout.Tapping += OnTapping;
+            }
+        }
+
+        /// <summary>
+        /// OnTapping handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="tapEventArgs"></param>
+        protected void OnTapping(object sender, TapEventArgs tapEventArgs)
+        {
+            VisibleToggle();
         }
 
         /// <summary>
@@ -129,16 +149,6 @@ namespace MR.Gestures
         {
             var handler = VisibleToggled;
             if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// OnTapped handler
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="eventArgs"></param>
-        private void OnTapped(object sender, EventArgs eventArgs)
-        {
-            VisibleToggle();
         }
 
         /// <summary>

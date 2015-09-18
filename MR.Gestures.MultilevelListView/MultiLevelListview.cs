@@ -31,7 +31,7 @@ namespace MR.Gestures
             get { return _source; }
             set
             {
-                _source = value as List<MultiLevelListViewCellBase>;
+                _source = value.ToList();
                 OnPropertyChanged();
             }
         }
