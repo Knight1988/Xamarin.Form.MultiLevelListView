@@ -1,17 +1,37 @@
 ## Xamarin.MultiLevelListView
 
 ### Useage:
-Create cell by inherit from MultiLevelListViewCellBase
-customize your cell by assit controls to View
-ex:
+Create cell by inherit from MultiLevelListViewCellBase.
+Then customize your cell by assit controls to View
 ``` C#
-	View = Label =new Label {Text = "Test"};
+	class TestCell : MultiLevelListViewCellBase
+    {
+        public TestCell(string text)
+        {
+            View = Label = new Label
+            {
+                Text = text
+            };
+        }
+
+        public TestCell()
+        {
+        }
+
+        protected Label Label { get; set; }
+
+        public string Text
+        {
+            get { return Label.Text; }
+            set { Label.Text = value; }
+        }
+    }
 ```
 
 Create a list of cell. Subs cell go to Children property
 ex:
 ```C#
-      var cells = new List<TestCell();
+      var cells = new List<TestCell>();
       for (int i = 0; i < 12; i++)
       {
         var root = new TestCell("Test " + i);
