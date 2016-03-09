@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using MultiLevelListview;
 using Xamarin.Forms;
 
@@ -6,41 +9,44 @@ namespace TestApp
 {
     public class App : Application
     {
+        private TestListView<MultiLevelItemBase> _listView;
+        private ObservableCollection<string> _source;
+
         public App()
         {
-            var lv = new MultiLevelListview.MultiLevelListview();
+            AppAsync();
+        }
+
+        private void AppAsync()
+        {
+            _listView = new TestListView<MultiLevelItemBase>();
+            _source = new ObservableCollection<string>();
+
+            _listView.ItemTemplate = new DataTemplate(typeof(TestCell));
+            //_listView.ItemTemplate.SetBinding(TextCell.TextProperty, "Name");
             // The root page of your application
             MainPage = new ContentPage
             {
-                Content = lv
+                Content = _listView
             };
 
-            var cells = new List<TestCell>();
-            for (var i = 0; i < 12; i++)
+            for (int i = 0; i < 3; i++)
             {
-                var root = new TestCell("Test " + i);
-                cells.Add(root);
-
-                for (var j = 0; j < 12; j++)
-                {
-                    var cell1 = new TestCell(string.Format("Test {0}-{1}", i, j));
-                    root.AddChild(cell1);
-
-                    for (var k = 0; k < 12; k++)
-                    {
-                        var cell2 = new TestCell(string.Format("Test {0}-{1}-{2}", i, j, k));
-                        cell1.AddChild(cell2);
-                    }
-                }
+                //var root = new MultiLevelItemBase() {Name = "Root " + i};
+                var root = "Root " + i;
+                _source.Add(root);
+                //for (int j = 0; j < 3; j++)
+                //{
+                //    var child1 = new MultiLevelItemBase() { Name = $"Child {i}-{j}" };
+                //    root.Children.Add(child1);
+                //    for (int k = 0; k < 3; k++)
+                //    {
+                //        var child2 = new MultiLevelItemBase() { Name = $"Child {i}-{j}-{k}" };
+                //        child1.Children.Add(child2);
+                //    }
+                //}
             }
-
-            lv.Source = cells.ToArray();
-            lv.Filter(@base =>
-            {
-                var test = (TestCell) @base;
-                return test.Text.Contains("1");
-            });
-            //lv.ClearFilter();
+            _listView.ItemsSource = _source;
         }
 
         protected override void OnResume()
