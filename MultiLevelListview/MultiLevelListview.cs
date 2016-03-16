@@ -1,233 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Xamarin.Forms;
 
 namespace MultiLevelListview
 {
-    public class MultiLevelListview : TableView
+    public class MultiLevelListView<T> : ListView where T : MultiLevelItemBase
     {
-        /// <summary>
-        ///     Flattened source
-        /// </summary>
-        private List<MultiLevelListViewCellBase> _flattened = new List<MultiLevelListViewCellBase>();
-
-        /// <summary>
-        ///     Tree source
-        /// </summary>
-        private List<MultiLevelListViewCellBase> _source = new List<MultiLevelListViewCellBase>();
-
-        public MultiLevelListview()
+        public new ObservableCollection<T> ItemsSource
         {
-            PropertyChanged += OnPropertyChanged;
+            get { return base.ItemsSource as ObservableCollection<T>; }
+            set { base.ItemsSource = value; }
         }
 
-        /// <summary>
-        ///     Tree source
-        /// </summary>
-        public IEnumerable<MultiLevelListViewCellBase> Source
+        public MultiLevelListView()
         {
-            get { return _source; }
-            set
-            {
-                _source = value.ToList();
-                OnPropertyChanged();
-            }
+            ItemTapped += OnItemTapped;
         }
 
-        public List<MultiLevelListViewCellBase> SelectedCells
+
+        private void OnItemTapped(object sender, ItemTappedEventArgs args)
         {
-            get
+            // Get tapped item
+            var item = (T)args.Item;
+
+            // Check if item is on expand state
+            if (item.IsExpand)
             {
-                var selected = new List<MultiLevelListViewCellBase>();
-                foreach (var cellBase in _flattened)
+                // Set collapse
+                item.Collapse();
+
+                var allChildren = item.Children.Concat(item.Children.SelectMany(p => p.Children));
+
+                // Remove children
+                foreach (var multiLevelItemBase in allChildren)
                 {
-                    if (cellBase.IsSelected)
-                    {
-                        selected.Add(cellBase);
-                    }
-                }
-                return selected;
-            }
-        }
-
-        public bool IsFiltering { get; set; }
-
-        /// <summary>
-        ///     Clear filter result
-        /// </summary>
-        public void ClearFilter()
-        {
-            IsFiltering = false;
-            var visibleCells = GetVisibleCell();
-            LoadSource(visibleCells);
-        }
-
-        /// <summary>
-        ///     Collapse all cells
-        /// </summary>
-        public void CollapseAll()
-        {
-            foreach (var cell in _source)
-            {
-                cell.Collapse();
-            }
-        }
-
-        /// <summary>
-        ///     Expand all cells
-        /// </summary>
-        public void ExpandAll()
-        {
-            foreach (var cell in _source)
-            {
-                cell.ExpandAll();
-            }
-        }
-
-        /// <summary>
-        ///     Filter list, result will show as normal list
-        /// </summary>
-        /// <param name="compareFunc"></param>
-        public void Filter(Func<MultiLevelListViewCellBase, bool> compareFunc)
-        {
-            IsFiltering = true;
-            var visileCells = new List<MultiLevelListViewCellBase>();
-            foreach (var @base in _flattened)
-            {
-                if (compareFunc(@base))
-                {
-                    visileCells.Add(@base);
+                    var child = (T)multiLevelItemBase;
+                    ItemsSource.Remove(child);
                 }
             }
-
-            LoadSource(visileCells);
-        }
-
-        /// <summary>
-        ///     Cell visible toggle handler
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="eventArgs"></param>
-        private void CellBaseOnVisibleToggled(object sender, EventArgs eventArgs)
-        {
-            if (IsFiltering) return;
-
-            var visibleCells = GetVisibleCell();
-            LoadSource(visibleCells);
-        }
-
-        /// <summary>
-        ///     Clear visible toggle event
-        /// </summary>
-        private void ClearSourceEvents()
-        {
-            foreach (var cell in _flattened)
+            else
             {
-                cell.ClearVisibleToggledEvent();
-                cell.VisibleToggled += CellBaseOnVisibleToggled;
-            }
-        }
-
-        /// <summary>
-        ///     Flatten tree
-        /// </summary>
-        /// <param name="roots"></param>
-        /// <returns></returns>
-        private List<MultiLevelListViewCellBase> Flatten(List<MultiLevelListViewCellBase> roots)
-        {
-            var root = new MultiLevelListViewCellBase();
-
-            root.Children = root.Children.Concat(roots);
-            var flattened = Flatten(root);
-            flattened.Remove(root);
-            return flattened;
-        }
-
-        /// <summary>
-        ///     Flatten tree
-        /// </summary>
-        /// <param name="root"></param>
-        /// <returns></returns>
-        private static List<MultiLevelListViewCellBase> Flatten(MultiLevelListViewCellBase root)
-        {
-            var flattened = new List<MultiLevelListViewCellBase> {root};
-
-            var children = root.Children;
-
-            if (children != null)
-            {
-                foreach (var child in children)
+                // get item index
+                var i = ItemsSource.IndexOf(item) + 1;
+                
+                // insert item under the parent
+                foreach (var multiLevelItemBase in item.Children)
                 {
-                    flattened.AddRange(Flatten(child));
+                    var child = (T)multiLevelItemBase;
+                    ItemsSource.Insert(i++, child);
                 }
-            }
-
-            return flattened.ToList();
-        }
-
-        /// <summary>
-        ///     Get cells to display
-        /// </summary>
-        /// <returns></returns>
-        private List<MultiLevelListViewCellBase> GetVisibleCell()
-        {
-            var list = new List<MultiLevelListViewCellBase>();
-            // Mark root
-            foreach (var source in _source)
-            {
-                source.IsRoot = true;
-            }
-
-            // Get visible cells
-            foreach (var cellBase in _flattened)
-            {
-                if (cellBase.IsRoot || cellBase.IsVisible)
-                {
-                    list.Add(cellBase);
-                }
-            }
-            return list;
-        }
-
-        /// <summary>
-        ///     Display source
-        /// </summary>
-        /// <param name="source"></param>
-        private void LoadSource(List<MultiLevelListViewCellBase> source)
-        {
-            var section = new TableSection();
-
-            foreach (var cell in source)
-            {
-                section.Add(cell);
-            }
-
-            Root = new TableRoot
-            {
-                section
-            };
-        }
-
-        /// <summary>
-        ///     Check if source is changed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            if (args.PropertyName == "Source")
-            {
-                // Collapse new source
-                CollapseAll();
-                // flatten new source
-                _flattened = Flatten(_source);
-                // clear source events
-                ClearSourceEvents();
-                // display new source
-                ClearFilter();
+                item.Expand();
             }
         }
+
     }
 }
