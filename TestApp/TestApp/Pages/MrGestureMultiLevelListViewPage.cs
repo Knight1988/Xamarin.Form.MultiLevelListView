@@ -1,11 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using MR.Gestures;
+using TestApp.ListViewCells;
 using Xamarin.Forms;
 using ContentPage = MR.Gestures.ContentPage;
 using ContentView = MR.Gestures.ContentView;
 using MultiLevelItemBase = MR.Gestures.MultiLevelItemBase;
 
-namespace TestApp
+namespace TestApp.Pages
 {
     public class MrGestureMultiLevelListViewPage : ContentPage
     {

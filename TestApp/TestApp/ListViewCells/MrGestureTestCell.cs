@@ -1,9 +1,8 @@
-using System;
 using MR.Gestures;
 using BindableObjectExtensions = Xamarin.Forms.BindableObjectExtensions;
 using BindableProperty = Xamarin.Forms.BindableProperty;
 
-namespace TestApp
+namespace TestApp.ListViewCells
 {
     public class MrGestureTestCell : ViewCell
     {
