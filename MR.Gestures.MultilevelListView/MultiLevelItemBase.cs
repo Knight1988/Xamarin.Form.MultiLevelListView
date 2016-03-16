@@ -10,6 +10,7 @@ namespace MR.Gestures
         public List<MultiLevelItemBase> Children { get; set; } = new List<MultiLevelItemBase>();
         public bool IsExpand { get; internal set; }
         public string Name { get; set; }
+        public MultiLevelItemBase Item => this;
 
         public void Expand()
         {
