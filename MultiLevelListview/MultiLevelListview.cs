@@ -52,6 +52,5 @@ namespace MultiLevelListview
                 item.Expand();
             }
         }
-
     }
 }
