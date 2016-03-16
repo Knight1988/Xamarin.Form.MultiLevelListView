@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using MultiLevelListview;
+﻿using System.Collections.ObjectModel;
 using Xamarin.Forms;
 
 namespace TestApp
 {
     public class App : Application
     {
-        private MultiLevelListView<MultiLevelItemBase> _listView;
-        private ObservableCollection<MultiLevelItemBase> _source;
+        private MR.Gestures.MultiLevelListView<MR.Gestures.MultiLevelItemBase> _listView;
+        private ObservableCollection<MR.Gestures.MultiLevelItemBase> _source;
 
         public App()
         {
@@ -19,8 +15,8 @@ namespace TestApp
 
         private void AppAsync()
         {
-            _listView = new MultiLevelListView<MultiLevelItemBase>();
-            _source = new ObservableCollection<MultiLevelItemBase>();
+            _listView = new MR.Gestures.MultiLevelListView<MR.Gestures.MultiLevelItemBase>();
+            _source = new ObservableCollection<MR.Gestures.MultiLevelItemBase>();
 
             _listView.ItemTemplate = new DataTemplate(typeof(TextCell));
             _listView.ItemTemplate.SetBinding(TextCell.TextProperty, "Name");
@@ -32,15 +28,15 @@ namespace TestApp
 
             for (int i = 0; i < 3; i++)
             {
-                var root = new MultiLevelItemBase() { Name = "Root " + i };
+                var root = new MR.Gestures.MultiLevelItemBase() { Name = "Root " + i };
                 _source.Add(root);
                 for (int j = 0; j < 3; j++)
                 {
-                    var child1 = new MultiLevelItemBase() { Name = $"Child {i}-{j}" };
+                    var child1 = new MR.Gestures.MultiLevelItemBase() { Name = $"Child {i}-{j}" };
                     root.Children.Add(child1);
                     for (int k = 0; k < 3; k++)
                     {
-                        var child2 = new MultiLevelItemBase() { Name = $"Child {i}-{j}-{k}" };
+                        var child2 = new MR.Gestures.MultiLevelItemBase() { Name = $"Child {i}-{j}-{k}" };
                         child1.Children.Add(child2);
                     }
                 }
