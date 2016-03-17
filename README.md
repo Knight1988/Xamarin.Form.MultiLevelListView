@@ -1,5 +1,7 @@
 ## Xamarin.MultiLevelListView
 
+## Master branch is in development and not working yet. fetch Release-v1.0 instead.
+
 ### Useage:
 Create cell by inherit from MultiLevelListViewCellBase.
 Then customize your cell by assit controls to View
