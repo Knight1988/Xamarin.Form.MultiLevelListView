@@ -25,7 +25,7 @@ namespace TestApp.Pages
             _source = new ObservableCollection<MultiLevelItemBase>();
 
             _listView.ItemTemplate = new DataTemplate(typeof(MrGestureTestCell));
-            _listView.ItemTemplate.SetBinding(MultiLevelListViewCell.ItemProperty, "Item");
+            _listView.ItemTemplate.SetBinding(MrGestureTestCell.ItemProperty, "Item");
             // The root page of your application
             Content = new ContentView()
             {

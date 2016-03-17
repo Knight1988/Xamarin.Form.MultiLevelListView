@@ -1,11 +1,6 @@
-using System;
-using MR.Gestures;
-using MR.Gestures.MultilevelListView;
 using Xamarin.Forms;
-using BindableProperty = Xamarin.Forms.BindableProperty;
-using ViewCell = MR.Gestures.ViewCell;
 
-namespace TestApp.ListViewCells
+namespace MR.Gestures.MultilevelListView
 {
     public class MultiLevelListViewCell : ViewCell
     {
@@ -37,6 +32,6 @@ namespace TestApp.ListViewCells
         }
 
         public static BindableProperty ItemProperty =
-            BindableProperty.Create("Item", typeof(MultiLevelItemBase), typeof(MrGestureTestCell), null);
+            BindableProperty.Create("Item", typeof(MultiLevelItemBase), typeof(MultiLevelListViewCell), null);
     }
 }
