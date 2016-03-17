@@ -1,16 +1,17 @@
 ﻿using System.Collections.ObjectModel;
 using MR.Gestures;
+using MR.Gestures.MultilevelListView;
 using TestApp.ListViewCells;
 using Xamarin.Forms;
 using ContentPage = MR.Gestures.ContentPage;
 using ContentView = MR.Gestures.ContentView;
-using MultiLevelItemBase = MR.Gestures.MultiLevelItemBase;
+using MultiLevelItemBase = MR.Gestures.MultilevelListView.MultiLevelItemBase;
 
 namespace TestApp.Pages
 {
     public class MrGestureMultiLevelListViewPage : ContentPage
     {
-        private MultiLevelListView<MultiLevelItemBase> _listView;
+        private MultiLevelListView _listView;
         private ObservableCollection<MultiLevelItemBase> _source;
 
         public MrGestureMultiLevelListViewPage()
@@ -20,12 +21,11 @@ namespace TestApp.Pages
 
         private void InitAsync()
         {
-            _listView = new MultiLevelListView<MultiLevelItemBase>();
+            _listView = new MultiLevelListView();
             _source = new ObservableCollection<MultiLevelItemBase>();
 
             _listView.ItemTemplate = new DataTemplate(typeof(MrGestureTestCell));
-            //_listView.ItemTemplate.SetBinding(TextCell.TextProperty, "Name");
-            _listView.ItemTemplate.SetBinding(MrGestureTestCell.ItemProperty, "Item");
+            _listView.ItemTemplate.SetBinding(MultiLevelListViewCell.ItemProperty, "Item");
             // The root page of your application
             Content = new ContentView()
             {

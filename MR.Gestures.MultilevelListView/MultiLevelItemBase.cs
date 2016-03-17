@@ -1,9 +1,6 @@
-﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 
-namespace MR.Gestures
+namespace MR.Gestures.MultilevelListView
 {
     public class MultiLevelItemBase
     {

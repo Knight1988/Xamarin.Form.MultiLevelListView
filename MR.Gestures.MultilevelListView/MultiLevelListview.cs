@@ -1,31 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using Xamarin.Forms;
 
-namespace MR.Gestures
+namespace MR.Gestures.MultilevelListView
 {
-    public class MultiLevelListView<T> : ListView where T : MultiLevelItemBase
+    public class MultiLevelListView : ListView
     {
-        public new ObservableCollection<T> ItemsSource
+        public new ObservableCollection<MultiLevelItemBase> ItemsSource
         {
-            get { return base.ItemsSource as ObservableCollection<T>; }
+            get { return base.ItemsSource as ObservableCollection<MultiLevelItemBase>; }
             set { base.ItemsSource = value; }
         }
 
-        public MultiLevelListView()
+        public void OnItemTapped(MultiLevelItemBase item)
         {
-            ItemTapped += OnItemTapped;
-        }
-
-
-        private void OnItemTapped(object sender, ItemTappedEventArgs args)
-        {
-            // Get tapped item
-            var item = (T)args.Item;
-
             // Check if item is on expand state
             if (item.IsExpand)
             {
@@ -35,9 +23,8 @@ namespace MR.Gestures
                 var allChildren = item.Children.Concat(item.Children.SelectMany(p => p.Children));
 
                 // Remove children
-                foreach (var multiLevelItemBase in allChildren)
+                foreach (var child in allChildren)
                 {
-                    var child = (T)multiLevelItemBase;
                     ItemsSource.Remove(child);
                 }
             }
@@ -47,9 +34,8 @@ namespace MR.Gestures
                 var i = ItemsSource.IndexOf(item) + 1;
 
                 // insert item under the parent
-                foreach (var multiLevelItemBase in item.Children)
+                foreach (var child in item.Children)
                 {
-                    var child = (T)multiLevelItemBase;
                     ItemsSource.Insert(i++, child);
                 }
                 item.Expand();

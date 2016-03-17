@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using MultiLevelListview;
 using TestApp.ListViewCells;
 using Xamarin.Forms;
@@ -21,7 +22,6 @@ namespace TestApp.Pages
             _source = new ObservableCollection<MultiLevelItemBase>();
 
             _listView.ItemTemplate = new DataTemplate(typeof(TestCell));
-            //_listView.ItemTemplate.SetBinding(TextCell.TextProperty, "Name");
             // The root page of your application
             Content = new ContentView()
             {

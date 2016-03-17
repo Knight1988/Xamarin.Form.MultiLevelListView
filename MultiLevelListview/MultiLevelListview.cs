@@ -17,7 +17,6 @@ namespace MultiLevelListview
             ItemTapped += OnItemTapped;
         }
 
-
         private void OnItemTapped(object sender, ItemTappedEventArgs args)
         {
             // Get tapped item
