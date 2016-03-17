@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="ListViewCells\MrGestureTestCell.cs" />
     <Compile Include="ListViewCells\MultiLevelListViewCell.cs" />
     <Compile Include="Pages\MenuPage.cs" />
     <Compile Include="Pages\MrGestureMultiLevelListViewPage.cs" />

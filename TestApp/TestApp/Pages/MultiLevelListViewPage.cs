@@ -34,11 +34,11 @@ namespace TestApp.Pages
                 _source.Add(root);
                 for (int j = 0; j < 3; j++)
                 {
-                    var child1 = new MultiLevelItemBase() { Name = $"Child {i}-{j}" };
+                    var child1 = new MultiLevelItemBase() { Name = $"\tChild {i}-{j}" };
                     root.Children.Add(child1);
                     for (int k = 0; k < 3; k++)
                     {
-                        var child2 = new MultiLevelItemBase() { Name = $"Child {i}-{j}-{k}" };
+                        var child2 = new MultiLevelItemBase() { Name = $"\t\tChild {i}-{j}-{k}" };
                         child1.Children.Add(child2);
                     }
                 }
